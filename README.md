@@ -8,6 +8,8 @@ To cross-build for arm:
 
 We HIGHLY recommend using g++ >= 5.0.
 
+This project was coded has an exercise for a course on "Project of Operational Systems", with the objective of understanding with more depth the information available on /proc and the usage of parallel computing with both processes and threads.
+
 ------------------------------------------------
 The main class is SysMonitor:
 
