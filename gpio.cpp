@@ -10,9 +10,9 @@ int buttonID = 47;
 
 bool getGpioValue(int id){
 	string result = run("cat "+pastaGpio+"/gpio"+to_string(id)+"/value");
-	cout << "run(" << "cat "+pastaGpio+"/gpio"+to_string(id)+"/value" << ") -> " << result << endl;
+	//cout << "run(" << "cat "+pastaGpio+"/gpio"+to_string(id)+"/value" << ") -> " << result << endl;
 	int res = stoi(result);
-	cout << res << endl;
+	//cout << res << endl;
 	return res != 0;
 }
 

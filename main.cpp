@@ -9,13 +9,15 @@
 using namespace std;
 
 int main(int argc, char const *argv[]) {
-  
+
   if(argc == 2){
     std::string resource(argv[1]);
     if(resource == "memory"){
       SysMonitor monitor(false);
+      monitor.start();
     }else if(resource == "cpu"){
       SysMonitor monitor(true);
+      monitor.start();
     }else{
       cout << "Unknown resource: " << argv[1] << "\n";
     }

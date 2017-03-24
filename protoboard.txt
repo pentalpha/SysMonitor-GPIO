@@ -1,0 +1,14 @@
+Quick-description of the protoboard circuit to be used with SysMonitor
+(incomplete)
+
+P9[1]->+Column
+P8[gpio66] -> a22
+P8[gpio69] -> a21
+P8[gpio45] -> a20
+d22 -> resistor -> d18
+c21 -> resistor -> c17
+b20 -> resistor -> b15
+e18 -> (bigLeg)GreenLED -> e12
+d17 -> (bigLeg)YellowLED -> d12
+c15 -> (bigLeg)RedLED -> c12
+P9[3] -> a12

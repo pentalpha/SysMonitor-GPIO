@@ -26,6 +26,14 @@ void SysMonitor::watchPanicButton(){
   t.detach();
 }
 
+void SysMonitor::quitWatcher(){
+  char c;
+  do{
+    cin >> c;
+  }while(c != 'q');
+  quitFlag = true;
+}
+
 /*Watcher to be runned on a thread
 Verifies the value of the panic button file
 And may send kill to dangerousProc
@@ -65,6 +73,9 @@ void SysMonitor::playPanicSign(){
     setValueYellow(1);
     std::this_thread::sleep_for(std::chrono::milliseconds{500});
   }
+  setValueGreen(0);
+  setValueRed(0);
+  setValueYellow(0);
 }
 
 void SysMonitor::lightOnlyRedLED(){
@@ -97,7 +108,7 @@ void SysMonitor::lightNoLEDs(){
 
 /* Scans /proc to get the stats of the processes */
 void SysMonitor::scanProcs(){
-  while(true){
+  while(!quitFlag){
     int memEater, cpuEater;
     memEater = cpuEater = -1;
     double totalCPU = 0.0;
@@ -133,7 +144,7 @@ void SysMonitor::scanProcs(){
     if(memMode){
       resource = totalMem / totalSysMemory;
     }
-    //cout << "res: " << resource << endl;
+    //cout << "resource usage: \t" << resource*100 << "%" << endl;
     if(panicMode){
       if(resource < 0.75){
         panicMode = false;
@@ -167,6 +178,7 @@ void SysMonitor::scanProcs(){
     addNewProcs();
     std::this_thread::sleep_for(std::chrono::seconds{1});
   }
+  lightNoLEDs();
 }
 
 void SysMonitor::redAlert(float resource){
