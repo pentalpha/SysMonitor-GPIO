@@ -1,3 +1,8 @@
+/*
+André Winston, UFRN, March 2017
+Repeatedly prompts the user for if he wants to allocate more 50MB, if the answer is 1.
+*/
+
 #include <iostream>
 #include <string.h>
 #include <stdlib.h>
