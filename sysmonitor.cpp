@@ -219,8 +219,7 @@ void SysMonitor::updateInfo(ProcInfo* info, const char* pathC){
 }
 
 void SysMonitor::updateInfo(ProcInfo* info, string path){
-  ifstream stream = std::ifstream(path + "/stat", std::ios::in);
-
+  auto stream = std::ifstream(path + "/stat");
   string temp;
   int utime, stime, cutime, cstime, residentPages, sharedPages;
   stream >> temp;

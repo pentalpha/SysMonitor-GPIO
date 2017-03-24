@@ -1,0 +1,2 @@
+g++ -pthread --std=c++11 -o sysmonitor run.cpp gpio.cpp sysmonitor.cpp main.cpp
+Makefile:2: recipe for target 'all' failed
