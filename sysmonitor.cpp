@@ -2,6 +2,22 @@
 
 using namespace std;
 
+void setValueRed(bool value){
+  setGpioValue(redAlertGPIO, value);
+}
+
+void setValueYellow(bool value){
+  setGpioValue(yellowAlertGPIO, value);
+}
+
+void setValueGreen(bool value){
+  setGpioValue(greenAlertGPIO, value);
+}
+
+bool getPanicButton(){
+  return getGpioValue(panicButtonGPIO);
+}
+
 //Starts a watcher for the panic button
 void SysMonitor::watchPanicButton(){
   function<void()> watcherFunc = [this](){
@@ -20,13 +36,14 @@ void SysMonitor::panicButtonWatcher(){
     if(getButtonState()){
       cout << "Killing\t" << dangerousProc << endl;
       sendKillTo(dangerousProc);
+      panicMode = false;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds{500});
   }
 }
 
 bool SysMonitor::getButtonState(){
-  return true;
+  return getPanicButton();
 }
 
 void SysMonitor::doPanicSign(){
@@ -39,22 +56,44 @@ void SysMonitor::doPanicSign(){
 void SysMonitor::playPanicSign(){
   while(panicMode){
     cout << "TURNOFF LED";
+    setValueGreen(0);
+    setValueRed(0);
+    setValueYellow(0);
     std::this_thread::sleep_for(std::chrono::milliseconds{500});
     cout << "TURNON LED";
+    setValueGreen(1);
+    setValueRed(1);
+    setValueYellow(1);
     std::this_thread::sleep_for(std::chrono::milliseconds{500});
   }
 }
 
 void SysMonitor::lightOnlyRedLED(){
+  setValueGreen(0);
+  setValueRed(1);
+  setValueYellow(0);
   cout << "RED ALERT" << endl;
 }
 
 void SysMonitor::lightOnlyYellowLED(){
+  setValueGreen(0);
+  setValueRed(0);
+  setValueYellow(1);
   cout << "YELLOW ALERT" << endl;
 }
 
 void SysMonitor::lightOnlyGreenLED(){
+  setValueGreen(1);
+  setValueRed(0);
+  setValueYellow(0);
   cout << "GREEN ALERT" << endl;
+}
+
+void SysMonitor::lightNoLEDs(){
+  setValueGreen(0);
+  setValueRed(0);
+  setValueYellow(0);
+  cout << "NO ALERT" << endl;
 }
 
 /* Scans /proc to get the stats of the processes */

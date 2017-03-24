@@ -9,17 +9,21 @@ int greenID = 66;
 int yellowID = 69;
 int redID = 45;
 int buttonID = 47;
-/*bool getGpioValue(int id){
+
+bool getGpioValue(int id){
 	string result = run("cat "+pastaGpio+"/gpio"+to_string(id)+"/value");
 	return result == "1";
 }
+
 string getGpioDirection(int id){
 	string result = run("cat "+pastaGpio+"/gpio"+to_string(id)+"/direction");
 	return result;
 }
-*/
+
 void setGpioDirection(int id, string val){
-	run("echo " + val + " > " + pastaGpio + "/gpio"+to_string(id)+"/direction");
+	if(val == "in" || val == "out"){
+		run("echo " + val + " > " + pastaGpio + "/gpio"+to_string(id)+"/direction");
+	}
 }
 
 void setGpioValue(int id, bool val){
@@ -31,17 +35,15 @@ void setGpioValue(int id, bool val){
 	else{
 		newVal = "0";
 	}
-	cout << "str = " << "echo " << newVal << " > " << pastaGpio << "/gpio" << to_string(id) << "/value" << endl;
+	cout << "run(" << "echo " << newVal << " > " << pastaGpio << "/gpio" << to_string(id) << "/value)" << endl;
 	run("echo " + newVal + " > " + pastaGpio + "/gpio"+to_string(id)+"/value");
 }
-
-
 
 void exportGpio(int id){
 	run("echo "+to_string(id)+" > "+pastaGpio+"/export");
 }
 
-int main(){
+/*int main(){
 
 	setGpioValue(yellowID, 1);
 	setGpioValue(redID, 1);
@@ -49,7 +51,7 @@ int main(){
 	sleep(2);
 	setGpioValue(yellowID, 0);
 	setGpioValue(redID, 0);
-	setGpioValue(greenID, 0);	
-	
+	setGpioValue(greenID, 0);
+
 	return 0;
-}
+}*/

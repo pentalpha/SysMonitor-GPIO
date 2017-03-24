@@ -20,6 +20,8 @@ Pitágoras Alves, March 2017, UFRN.
 #include <unistd.h>
 #include <signal.h>
 #include "tinydir.h"
+#include "run.h"
+#include "gpio.h"
 
 struct ProcInfo{
   int pid;
@@ -41,13 +43,18 @@ const int redAlertGPIO = 45;
 const int yellowAlertGPIO = 69;
 const int greenAlertGPIO = 66;
 
+void setValueRed(bool value);
+void setValueYellow(bool value);
+void setValueGreen(bool value);
+bool getPanicButton();
+
 class SysMonitor{
 public:
   AlertMode alertMode;
   std::atomic_bool panicMode;
   std::atomic_bool memMode;
   std::atomic_bool cpuMode;
-  std::atomic_bool panicButton;
+  //std::atomic_bool panicButton;
   std::atomic_int dangerousProc;
 
   double hertzPerSecond = sysconf(_SC_CLK_TCK);
