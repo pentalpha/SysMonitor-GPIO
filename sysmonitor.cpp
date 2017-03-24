@@ -219,7 +219,8 @@ void SysMonitor::updateInfo(ProcInfo* info, const char* pathC){
 }
 
 void SysMonitor::updateInfo(ProcInfo* info, string path){
-  ifstream stream = std::ifstream(path + "/stat", std::ios::in);
+  string pathWithStat = path + "/stat";
+  ifstream stream = std::fstream(pathWithStat);
 
   string temp;
   int utime, stime, cutime, cstime, residentPages, sharedPages;
@@ -240,7 +241,8 @@ void SysMonitor::updateInfo(ProcInfo* info, string path){
   stream >> stime;
   info->totalTime = ((utime+stime)/hertzPerSecond);
   info->lastCheck = chrono::system_clock::now();
-  stream = std::ifstream(path + "/statm", std::ios::in);
+  string pathWithMem = path + "/statm";
+  stream = std::fstream(pathWithMem);
   stream >> temp;
   stream >> residentPages;
   stream >> sharedPages;
