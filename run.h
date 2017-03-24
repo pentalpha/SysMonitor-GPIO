@@ -28,44 +28,10 @@ void runWhileSilent(vector<string> commands);
 string run(string command);
 string run(const char* command);
 
-void runWhileSilent(vector<string> commands){
-  string output;
-  for(string cmd : commands){
-    output = run(cmd);
-    if(output.length() > 2){
-      cout << output << endl;
-      break;
-    }
-  }
-}
+void runWhileSilent(vector<string> commands);
 
-string run(string command){
-  return run(command.c_str());
-}
+string run(string command);
 
-string run(const char* command){
-  int bufferSize = 128;
-  char buff[bufferSize];
-  string output = "";
-  FILE *procStream = popen(command, "r");
-
-  if(procStream == NULL){
-    throw std::runtime_error("Could not get process output");
-  }else{
-    try{
-      while (!feof(procStream)){
-          if (fgets(buff, bufferSize, procStream) != NULL){
-              output += buff;
-          }
-      }
-    }catch(...){
-      pclose(procStream);
-      throw std::runtime_error("Error while getting output of process");
-    }
-    pclose(procStream);
-    return output;
-  }
-
-}
+string run(const char* command);
 
 #endif

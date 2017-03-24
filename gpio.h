@@ -1,3 +1,6 @@
+#ifndef _GPIO_API_
+#define _GPIO_API_
+
 #include <string>
 #include <unistd.h>
 #include "run.h"
@@ -10,38 +13,15 @@ int yellowID = 69;
 int redID = 45;
 int buttonID = 47;
 
-bool getGpioValue(int id){
-	string result = run("cat "+pastaGpio+"/gpio"+to_string(id)+"/value");
-	return result == "1";
-}
+bool getGpioValue(int id);
 
-string getGpioDirection(int id){
-	string result = run("cat "+pastaGpio+"/gpio"+to_string(id)+"/direction");
-	return result;
-}
+string getGpioDirection(int id);
 
-void setGpioDirection(int id, string val){
-	if(val == "in" || val == "out"){
-		run("echo " + val + " > " + pastaGpio + "/gpio"+to_string(id)+"/direction");
-	}
-}
+void setGpioDirection(int id, string val);
 
-void setGpioValue(int id, bool val){
-	setGpioDirection(id, "out");
-	string newVal;
-	if(val) {
-		newVal = "1";
-	}
-	else{
-		newVal = "0";
-	}
-	cout << "run(" << "echo " << newVal << " > " << pastaGpio << "/gpio" << to_string(id) << "/value)" << endl;
-	run("echo " + newVal + " > " + pastaGpio + "/gpio"+to_string(id)+"/value");
-}
+void setGpioValue(int id, bool val);
 
-void exportGpio(int id){
-	run("echo "+to_string(id)+" > "+pastaGpio+"/export");
-}
+void exportGpio(int id);
 
 /*int main(){
 
@@ -55,3 +35,5 @@ void exportGpio(int id){
 
 	return 0;
 }*/
+
+#endif

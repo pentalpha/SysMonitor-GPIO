@@ -1,7 +1,6 @@
 /*
 Pitágoras Alves, March 2017, UFRN.
 */
-
 #ifndef _SYS_MONITOR_
 #define _SYS_MONITOR_
 
@@ -20,7 +19,6 @@ Pitágoras Alves, March 2017, UFRN.
 #include <unistd.h>
 #include <signal.h>
 #include "tinydir.h"
-#include "run.h"
 #include "gpio.h"
 
 struct ProcInfo{
@@ -102,7 +100,7 @@ protected:
   static void lightOnlyRedLED();
   static void lightOnlyYellowLED();
   static void lightOnlyGreenLED();
-  static void lightNoLEDs()
+  static void lightNoLEDs();
   bool getButtonState();
 };
 
