@@ -102,6 +102,7 @@ protected:
   static void lightOnlyRedLED();
   static void lightOnlyYellowLED();
   static void lightOnlyGreenLED();
+  static void lightNoLEDs()
   bool getButtonState();
 };
 
