@@ -1,10 +1,15 @@
 #include <iostream>
 #include <string>
+#include <unistd.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <signal.h>
 #include "sysmonitor.h"
 
 using namespace std;
 
 int main(int argc, char const *argv[]) {
+  
   if(argc == 2){
     std::string resource(argv[1]);
     if(resource == "memory"){

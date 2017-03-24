@@ -11,13 +11,13 @@ Pitágoras Alves, March 2017, UFRN.
 #include <errno.h>
 #include <iostream>
 #include <chrono>
-#include <thread>
 #include <future>
 #include <fstream>
 #include <string>
 #include <map>
 #include <unistd.h>
 #include <signal.h>
+#include <thread>
 #include "tinydir.h"
 #include "gpio.h"
 

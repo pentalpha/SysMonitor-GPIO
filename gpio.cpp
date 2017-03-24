@@ -2,9 +2,18 @@
 
 using namespace std;
 
+string pastaGpio = "/sys/class/gpio";
+int greenID = 66;
+int yellowID = 69;
+int redID = 45;
+int buttonID = 47;
+
 bool getGpioValue(int id){
 	string result = run("cat "+pastaGpio+"/gpio"+to_string(id)+"/value");
-	return result == "1";
+	cout << "run(" << "cat "+pastaGpio+"/gpio"+to_string(id)+"/value" << ") -> " << result << endl;
+	int res = stoi(result);
+	cout << res << endl;
+	return res != 0;
 }
 
 string getGpioDirection(int id){
@@ -27,7 +36,7 @@ void setGpioValue(int id, bool val){
 	else{
 		newVal = "0";
 	}
-	cout << "run(" << "echo " << newVal << " > " << pastaGpio << "/gpio" << to_string(id) << "/value)" << endl;
+	//cout << "run(" << "echo " << newVal << " > " << pastaGpio << "/gpio" << to_string(id) << "/value)" << endl;
 	run("echo " + newVal + " > " + pastaGpio + "/gpio"+to_string(id)+"/value");
 }
 

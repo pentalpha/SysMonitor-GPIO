@@ -20,10 +20,10 @@ bool getPanicButton(){
 
 //Starts a watcher for the panic button
 void SysMonitor::watchPanicButton(){
-  function<void()> watcherFunc = [this](){
-    panicButtonWatcher();
-  };
-  async(watcherFunc);
+  //cout << "Watching for panic button outside " << endl;
+  thread t(&SysMonitor::panicButtonWatcher, this);
+  //cout << "Going to detach\n" << endl;
+  t.detach();
 }
 
 /*Watcher to be runned on a thread
@@ -31,15 +31,15 @@ Verifies the value of the panic button file
 And may send kill to dangerousProc
 */
 void SysMonitor::panicButtonWatcher(){
-  cout << "Watching for panic button" << endl;
-  while(panicMode){
-    if(getButtonState()){
+  //cout << "Watching for panic button inside" << endl;
+  do{
+    if(getGpioValue(panicButtonGPIO)){
       cout << "Killing\t" << dangerousProc << endl;
       sendKillTo(dangerousProc);
       panicMode = false;
     }
     std::this_thread::sleep_for(std::chrono::milliseconds{500});
-  }
+  }while(panicMode);
 }
 
 bool SysMonitor::getButtonState(){
@@ -47,20 +47,19 @@ bool SysMonitor::getButtonState(){
 }
 
 void SysMonitor::doPanicSign(){
-  function<void()> playerFunc = [this](){
-    playPanicSign();
-  };
-  async(playerFunc);
+  thread t(&SysMonitor::playPanicSign, this);
+  //cout << "Going to detach\n" << endl;
+  t.detach();
 }
 
 void SysMonitor::playPanicSign(){
   while(panicMode){
-    cout << "TURNOFF LED";
+    //cout << "TURNOFF LED\n";
     setValueGreen(0);
     setValueRed(0);
     setValueYellow(0);
     std::this_thread::sleep_for(std::chrono::milliseconds{500});
-    cout << "TURNON LED";
+    //cout << "TURNON LED\n";
     setValueGreen(1);
     setValueRed(1);
     setValueYellow(1);
@@ -102,6 +101,7 @@ void SysMonitor::scanProcs(){
     int memEater, cpuEater;
     memEater = cpuEater = -1;
     double totalCPU = 0.0;
+    //double totalTimeSpent = 0.0;
     float totalMem = 0.0;
     for(pair<int, ProcInfo*> element : procs){
       if(element.second->state == 'R' || element.second->state == 'S'){
@@ -111,7 +111,10 @@ void SysMonitor::scanProcs(){
         double timeSpent = element.second->totalTime - previousTime;
         auto timeSince = std::chrono::duration_cast<std::chrono::seconds>(element.second->lastCheck-previousCheck);
         element.second->lastCPU = timeSpent / timeSince.count();
-        totalCPU += element.second->lastCPU;
+        if(element.second->state == 'R') {
+          totalCPU += element.second->lastCPU;
+        }
+        //totalTimeSpent+=
         totalMem += element.second->totalMemory;
         if(memEater == -1 || cpuEater == -1){
           memEater = cpuEater = element.first;
@@ -131,26 +134,34 @@ void SysMonitor::scanProcs(){
       resource = totalMem / totalSysMemory;
     }
     //cout << "res: " << resource << endl;
-    if(resource >= 0.75){
-      panicMode = true;
-      alertMode = NONE;
-      cout << "resource usage:\t" << resource << endl;
-      if(memMode==false){
-        dangerousProc = cpuEater;
+    if(panicMode){
+      if(resource < 0.75){
+        panicMode = false;
       }else{
-        dangerousProc = memEater;
+
       }
-      watchPanicButton();
-      doPanicSign();
     }else{
-      panicMode = false;
-      if(resource >= 0.50){
-        redAlert(resource);
-      }else if(resource >= 0.25){
-        yellowAlert(resource);
+      if(resource >= 0.75){
+        panicMode = true;
+        alertMode = NONE;
+        //cout << "resource usage:\t" << resource << endl;
+        if(memMode==false){
+          dangerousProc = cpuEater;
+        }else{
+          dangerousProc = memEater;
+        }
+        watchPanicButton();
+        doPanicSign();
       }else{
-        //cout << "alert?\n";
-        greenAlert(resource);
+        panicMode = false;
+        if(resource >= 0.50){
+          redAlert(resource);
+        }else if(resource >= 0.25){
+          yellowAlert(resource);
+        }else{
+          //cout << "alert?\n";
+          greenAlert(resource);
+        }
       }
     }
     addNewProcs();
@@ -220,7 +231,7 @@ void SysMonitor::updateInfo(ProcInfo* info, const char* pathC){
 
 void SysMonitor::updateInfo(ProcInfo* info, string path){
   string pathWithStat = path + "/stat";
-  ifstream stream = std::fstream(pathWithStat);
+  auto stream = std::fstream(pathWithStat);
 
   string temp;
   int utime, stime, cutime, cstime, residentPages, sharedPages;
