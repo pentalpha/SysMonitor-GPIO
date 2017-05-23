@@ -1,10 +1,19 @@
+# SysMonitor-GPIO
 Dangerous process monitor and killer designed to be used on a Beaglebone-Black, to display resource usage levels using LEDs and offer an input buttom to kill the process who is using the most resources.
 
-To build for local arch:
-- make
+## To build for local arch:
+```shell
+$ make
+$ chmod +x sysmonitor
+$ ./sysmonitor
+```
 
-To cross-build for arm:
-- make arm
+## To cross-build for arm:
+```shell
+$ make arm
+$ chmod +x sysmonitor_arm
+$ ./sysmonitor_arm
+```
 
 We HIGHLY recommend using g++ >= 5.0.
 
@@ -26,9 +35,11 @@ SysMonitor has 3 analogic outputs and one input:
 - While in the Panic State, the PanicButton will be enabled. This button is capable of sending a SIGTERM to the process who is using the most resources, when pressed down.
 
 SysMonitor communicates with the LEDs and the button through gpio's. Their IDs are listed bellow:
+```cpp
 const int panicButtonGPIO = 47;
 const int redAlertGPIO = 45;
 const int yellowAlertGPIO = 69;
 const int greenAlertGPIO = 66;
+```
 
 After starting the instance, call SysMonitor.start() to start the monitor.
